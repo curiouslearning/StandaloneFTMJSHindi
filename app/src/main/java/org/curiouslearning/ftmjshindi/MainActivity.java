@@ -127,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 FileInputStream fis = new FileInputStream(file);
                 String mime = getMimeTypeForFile(uri);
+                if (mime == null) {
+                    mime = "text/html";
+                }
                 return NanoHTTPD.newChunkedResponse(Status.OK, mime, fis);
             } catch (IOException e) {
                 return NanoHTTPD.newFixedLengthResponse(Status.INTERNAL_ERROR, "text/plain", "500 Internal Server Error");
