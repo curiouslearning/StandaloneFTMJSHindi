@@ -120,7 +120,7 @@ async function getALLAudioUrls(cacheName, language) {
               ? file.slice(0, file.indexOf("/feedthemonster") + "/feedthemonster".length) +
               "dev" + file.slice(file.indexOf("/feedthemonster") + "/feedthemonster".length)
               : self.location.href.includes(testURL)
-                ? file.replace("https://feedthemonster.curiouscontent.org", testURL)
+                ? file.replace(".", testURL)
                 : file
           );
         }
@@ -228,8 +228,8 @@ async function cacheFeedBackAudio(feedBackAudios, language) {
     if (self.location.href.includes("feedthemonsterdev")) {
       return audio.replace("/feedthemonster", "/feedthemonsterdev");
     } else if (self.location.href.includes(testURL)) {
-      return audio.replace("https://feedthemonster.curiouscontent.org", "https://globallit-aws-s3-static-webapp-test-us-east-2.s3.us-west-2.amazonaws.com/feed-the-monster");
-      // return audio.replace("https://feedthemonster.curiouscontent.org", "http://127.0.0.1:5500"); 
+      return audio.replace(".", "https://globallit-aws-s3-static-webapp-test-us-east-2.s3.us-west-2.amazonaws.com/feed-the-monster");
+      // return audio.replace(".", "http://127.0.0.1:5500");
     } else {
       return audio;
     }

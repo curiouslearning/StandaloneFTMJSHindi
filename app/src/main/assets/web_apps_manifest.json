@@ -1,0 +1,13 @@
+{
+  "version": "1.95",
+  "web_apps": [
+    {
+      "appId": 0,
+      "appIconUrl": "ftm_hindi.png",
+      "title": "Feed The Monster Hindi",
+      "appUrl": "https://appassets.androidplatform.net/assets/FeedTheMonsterJs/index.html?cr_lang=hindi",
+      "language": "Hindi",
+      "languageInEnglishName": "Hindi"
+    }
+  ]
+}
