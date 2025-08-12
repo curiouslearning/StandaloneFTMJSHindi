@@ -3,11 +3,11 @@
   "web_apps": [
     {
       "appId": 0,
-      "appIconUrl": "ftm_hindi.png",
-      "title": "Feed The Monster Hindi",
-      "appUrl": "https://appassets.androidplatform.net/assets/FeedTheMonsterJs/index.html?cr_lang=hindi",
-      "language": "Hindi",
-      "languageInEnglishName": "Hindi"
+      "appIconUrl": "ftm_english_prod.png",
+      "title": "Feed The Monster English",
+      "appUrl": "https://appassets.androidplatform.net/assets/FeedTheMonsterJs/index.html?cr_lang=english",
+      "language": "English",
+      "languageInEnglishName": "English"
     }
   ]
 }

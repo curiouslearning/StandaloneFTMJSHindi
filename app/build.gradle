@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'org.curiouslearning.ftmjshindi'
+    namespace 'org.curiouslearning.ftmjsenglish'
     compileSdk 35
 
     defaultConfig {
-        applicationId "org.curiouslearning.ftmjshindi"
+        applicationId "org.curiouslearning.ftmjsenglish"
         minSdk 28
         targetSdk 35
         versionCode 1
