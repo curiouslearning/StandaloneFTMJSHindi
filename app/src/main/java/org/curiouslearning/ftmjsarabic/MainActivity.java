@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Load the asset-based URL
-        String appUrl = "https://appassets.androidplatform.net/assets/FeedTheMonsterJS/index.html?cr_lang=hindi&cr_user_id="+pseudoId;
+        String appUrl = "https://appassets.androidplatform.net/assets/FeedTheMonsterJS/index.html?cr_lang=arabic&cr_user_id="+pseudoId;
         webView.loadUrl(appUrl);
     }
     private void cachePseudoId() {
