@@ -1,136 +1,82 @@
 package org.curiouslearning.ftmjshindi;
-
-import android.content.res.AssetManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
+import androidx.webkit.WebViewAssetLoader;
 
-import fi.iki.elonen.NanoHTTPD;
-import fi.iki.elonen.NanoHTTPD.IHTTPSession;
-import fi.iki.elonen.NanoHTTPD.Response;
-import fi.iki.elonen.NanoHTTPD.Response.Status;
+import org.curiouslearning.ftmjshindi.R;
 
-import java.io.*;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     private WebView webView;
-    private LocalServer localServer;
-    private static final int PORT = 8080;
+    private SharedPreferences cachedPseudo;
+    private static final String SHARED_PREFS_NAME = "appCached";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        WebView.setWebContentsDebuggingEnabled(true);
-
         setContentView(R.layout.activity_main);
-        webView = findViewById(R.id.webview);
+        cachePseudoId();
+        webView = findViewById(R.id.webview); // Ensure you have a WebView in this layout
 
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        webView.getSettings().setAllowFileAccess(true);
+//        webView = findViewById(R.id.web_app);  // Make sure your layout has a WebView with this ID
+        webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+        webView.setHorizontalScrollBarEnabled(false);
 
-        webView.setWebViewClient(new WebViewClient());
-
-        File wwwDir = new File(getFilesDir(), "www");
-        if (!wwwDir.exists()) wwwDir.mkdirs();
-
-        // Copy assets preserving folder structure
-        copyAssetsToStorage("www", wwwDir);
-
-        File indexFile = new File(wwwDir, "index.html");
-        System.out.println("📄 index.html exists: " + indexFile.exists() + " at " + indexFile.getAbsolutePath());
-
-        try {
-            localServer = new LocalServer(PORT, wwwDir);
-            System.out.println("✅ NanoHTTPD started at http://localhost:" + PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        webView.loadUrl("http://localhost:" + PORT + "/");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (localServer != null) {
-            localServer.stop();
-        }
-    }
-
-    private void copyAssetsToStorage(String assetPath, File targetDir) {
-        AssetManager assetManager = getAssets();
-        try {
-            String[] assets = assetManager.list(assetPath);
-            if (assets == null || assets.length == 0) {
-                // It's a file, copy it
-                InputStream in = assetManager.open(assetPath);
-
-                // Compute relative path under "www"
-                String relativePath = assetPath.substring("www/".length());
-                File outFile = new File(targetDir, relativePath);
-
-                // Ensure parent directories exist
-                File parent = outFile.getParentFile();
-                if (parent != null && !parent.exists()) {
-                    parent.mkdirs();
-                }
-
-                FileOutputStream out = new FileOutputStream(outFile);
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
-                }
-                in.close();
-                out.flush();
-                out.close();
-                System.out.println("✅ Copied file: " + outFile.getAbsolutePath());
-            } else {
-                // It's a directory, recurse into each child
-                for (String asset : assets) {
-                    copyAssetsToStorage(assetPath + "/" + asset, targetDir);
-                }
+        // Enable required settings
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        cachedPseudo =getSharedPreferences(SHARED_PREFS_NAME,MODE_PRIVATE);
+        // Use WebViewAssetLoader for local assets
+        WebViewAssetLoader assetLoader = new WebViewAssetLoader.Builder()
+                .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
+                .build();
+        String pseudoId = cachedPseudo.getString("pseudoId","");
+        System.out.println("pseudoID>> "+pseudoId);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                return assetLoader.shouldInterceptRequest(request.getUrl());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        });
+
+        // Load the asset-based URL
+        String appUrl = "https://appassets.androidplatform.net/assets/FeedTheMonsterJS/index.html?cr_lang=hindi&cr_user_id="+pseudoId;
+        webView.loadUrl(appUrl);
+    }
+    private void cachePseudoId() {
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        cachedPseudo = getApplicationContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = cachedPseudo.edit();
+        if (!cachedPseudo.contains("pseudoId")) {
+            editor.putString("pseudoId",
+                    generatePseudoId() + calendar.get(Calendar.YEAR) + (calendar.get(Calendar.MONTH) + 1) +
+                            calendar.get(Calendar.DAY_OF_MONTH) + calendar.get(Calendar.HOUR_OF_DAY)
+                            + calendar.get(Calendar.MINUTE) + calendar.get(Calendar.SECOND));
+            editor.commit();
         }
     }
-
-    public static class LocalServer extends NanoHTTPD {
-        private File rootDir;
-
-        public LocalServer(int port, File wwwRoot) throws IOException {
-            super(port);
-            this.rootDir = wwwRoot;
-            start(SOCKET_READ_TIMEOUT, false);
-        }
-
-        @Override
-        public Response serve(IHTTPSession session) {
-            String uri = session.getUri();
-            if (uri.equals("/")) uri = "/index.html";
-
-            File file = new File(rootDir, uri);
-            System.out.println("🌐 Requested URI: " + session.getUri());
-            System.out.println("📂 Looking for file: " + file.getAbsolutePath());
-
-            if (!file.exists()) {
-                System.out.println("❌ File not found: " + file.getAbsolutePath());
-                return NanoHTTPD.newFixedLengthResponse(Status.NOT_FOUND, "text/plain", "404 Not Found");
-            }
-
-            try {
-                FileInputStream fis = new FileInputStream(file);
-                String mime = getMimeTypeForFile(uri);
-                return NanoHTTPD.newChunkedResponse(Status.OK, mime, fis);
-            } catch (IOException e) {
-                return NanoHTTPD.newFixedLengthResponse(Status.INTERNAL_ERROR, "text/plain", "500 Internal Server Error");
-            }
-        }
+    private String generatePseudoId() {
+        SecureRandom random = new SecureRandom();
+        String pseudoId = new BigInteger(130, random).toString(32);
+        System.out.println(pseudoId);
+        return pseudoId;
     }
+
 }
