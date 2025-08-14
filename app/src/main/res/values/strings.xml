@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FTMJSArabic</string>
+    <string name="facebook_app_id">1312100423969376</string>
+    <string name="facebook_client_token">fb224c6dc12c050d10452fb3e03f12f6</string>
 </resources>
