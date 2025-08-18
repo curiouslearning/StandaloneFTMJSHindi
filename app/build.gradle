@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+def facebookAppId = project.hasProperty("FACEBOOK_APP_ID") ? FACEBOOK_APP_ID : ""
+def facebookClientToken = project.hasProperty("FACEBOOK_CLIENT_TOKEN") ? FACEBOOK_CLIENT_TOKEN : ""
 android {
     namespace 'org.curiouslearning.ftmjshindi'
     compileSdk 35
