@@ -2,8 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
-def facebookAppId = project.hasProperty("FACEBOOK_APP_ID") ? FACEBOOK_APP_ID : ""
-def facebookClientToken = project.hasProperty("FACEBOOK_CLIENT_TOKEN") ? FACEBOOK_CLIENT_TOKEN : ""
 android {
     namespace 'org.curiouslearning.ftmjshindi'
     compileSdk 35
@@ -16,10 +14,17 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [
-                facebookAppId     : facebookAppId,
-                facebookClientToken: facebookClientToken
-        ]
+        def localProps = new Properties()
+        def localFile = rootProject.file("local.properties")
+        if (localFile.exists()) {
+            localFile.withInputStream { localProps.load(it) }
+        }
+
+        def fbAppId = localProps.getProperty("FACEBOOK_APP_ID", "")
+        def fbClientToken = localProps.getProperty("FACEBOOK_CLIENT_TOKEN", "")
+
+        resValue "string", "facebook_app_id", fbAppId
+        resValue "string", "facebook_client_token", fbClientToken
     }
 
     buildTypes {
