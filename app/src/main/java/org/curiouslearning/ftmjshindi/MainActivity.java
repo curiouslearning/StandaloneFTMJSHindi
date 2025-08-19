@@ -10,6 +10,8 @@ import android.webkit.WebViewClient;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.webkit.WebViewAssetLoader;
 
+import com.facebook.appevents.AppEventsLogger;
+
 import org.curiouslearning.ftmjshindi.R;
 
 import java.math.BigInteger;
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AppEventsLogger logger = AppEventsLogger.newLogger(this);
+        logger.logEvent("test_event_from_app");
         cachePseudoId();
         webView = findViewById(R.id.webview); // Ensure you have a WebView in this layout
 
