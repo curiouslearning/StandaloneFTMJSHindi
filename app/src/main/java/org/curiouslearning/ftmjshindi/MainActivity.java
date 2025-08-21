@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Load the asset-based URL
-        String appUrl = "https://worldbanknigeria.androidplatform.net/assets/FeedTheMonsterJS/index.html?cr_lang=hindi&cr_user_id=" + pseudoId;
+        String appUrl = "https://hindi-ftm-standalone.androidplatform.net/assets/FeedTheMonsterJS/index.html?cr_lang=hindi&cr_user_id=" + pseudoId;
         webView.loadUrl(appUrl);
     }
     private void cachePseudoId() {
