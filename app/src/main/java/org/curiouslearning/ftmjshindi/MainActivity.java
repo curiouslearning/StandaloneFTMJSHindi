@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         cachedPseudo =getSharedPreferences(SHARED_PREFS_NAME,MODE_PRIVATE);
         // Use WebViewAssetLoader for local assets
         WebViewAssetLoader assetLoader = new WebViewAssetLoader.Builder()
+                .setDomain("hindi-ftm-standalone.androidplatform.net") // 👈 custom domain here
                 .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
                 .build();
         String pseudoId = cachedPseudo.getString("pseudoId","");
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Load the asset-based URL
-        String appUrl = "https://appassets.androidplatform.net/assets/FeedTheMonsterJS/index.html?cr_lang=hindi&cr_user_id="+pseudoId;
+        String appUrl = "https://worldbanknigeria.androidplatform.net/assets/FeedTheMonsterJS/index.html?cr_lang=hindi&cr_user_id=" + pseudoId;
         webView.loadUrl(appUrl);
     }
     private void cachePseudoId() {
