@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         cachedPseudo =getSharedPreferences(SHARED_PREFS_NAME,MODE_PRIVATE);
         // Use WebViewAssetLoader for local assets
         WebViewAssetLoader assetLoader = new WebViewAssetLoader.Builder()
-                .setDomain("hindi-ftm-standalone.androidplatform.net") // 👈 custom domain here
+                .setDomain("hindi-ftm-standalone.androidplatform.net") 
                 .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
                 .build();
         String pseudoId = cachedPseudo.getString("pseudoId","");
