@@ -14,6 +14,17 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        def localProps = new Properties()
+        def localFile = rootProject.file("local.properties")
+        if (localFile.exists()) {
+            localFile.withInputStream { localProps.load(it) }
+        }
+
+        def fbAppId = localProps.getProperty("FACEBOOK_APP_ID", "")
+        def fbClientToken = localProps.getProperty("FACEBOOK_CLIENT_TOKEN", "")
+
+        resValue "string", "facebook_app_id", fbAppId
+        resValue "string", "facebook_client_token", fbClientToken
     }
 
     buildTypes {
@@ -40,4 +51,7 @@ dependencies {
     androidTestImplementation libs.espresso.core
 
     implementation 'androidx.webkit:webkit:1.9.0'
+
+    // facebook sdk version
+    implementation 'com.facebook.android:facebook-android-sdk:18.1.3'
 }
