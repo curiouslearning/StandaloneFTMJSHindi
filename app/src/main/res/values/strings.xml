@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FTMJSHindi</string>
+    <string name="app_name">إطعام ٱلوحش</string>
     <string name="facebook_app_id">${facebookAppId}</string>
     <string name="facebook_client_token">${facebookClientToken}</string>
 </resources>
