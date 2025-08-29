@@ -1,4 +1,4 @@
-package org.curiouslearning.ftmjshindi;
+package org.curiouslearning.ftmjsenglish;
 
 import android.app.Application;
 import com.facebook.FacebookSdk;
