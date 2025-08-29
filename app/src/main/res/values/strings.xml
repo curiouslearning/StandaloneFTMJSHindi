@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FTMJSEnglish</string>
-    <string name="facebook_app_id">728602326648342</string>
-    <string name="facebook_client_token">9b1d6cd65dd0f294a03c19396bebdcb3</string>
+    <string name="app_name">FTMJSHindi</string>
+    <string name="facebook_app_id">${facebookAppId}</string>
+    <string name="facebook_client_token">${facebookClientToken}</string>
 </resources>
